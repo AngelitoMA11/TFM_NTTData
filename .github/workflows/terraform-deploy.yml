@@ -1,0 +1,41 @@
+name: Despliegue de Terraform en GCP
+description: Despliega infraestructura de Terraform en Google Cloud Platform (GCP) cuando se modifican archivos de Terraform.
+
+on:
+  push:
+    paths:
+      - 'terraform/**'  # Solo si se modifican archivos de Terraform
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Authenticate with GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'  
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.6.0
+
+      - name: Terraform Init
+        working-directory: terraform/
+        run: terraform init
+
+      - name: Terraform Validate
+        working-directory: terraform/
+        run: terraform validate
+
+      - name: Terraform Plan
+        working-directory: terraform/
+        run: terraform plan -out=tfplan
+
+      - name: Terraform Apply
+        working-directory: terraform/
+        run: terraform apply -auto-approve tfplan
