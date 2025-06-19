@@ -15,7 +15,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Mostrar repo desde variable GitHub
-        run: echo "Este es el repo: $GITHUB_REPOSITORY"
+        run: |
+            echo "Este es el repo: $GITHUB_REPOSITORY"
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
