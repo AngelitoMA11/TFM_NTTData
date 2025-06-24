@@ -30,6 +30,11 @@ variable "env_vars" {
   default     = {}
 }
 
+variable "deploy_cloud_run" {
+  type    = bool
+  default = true
+}
+
 
 
 

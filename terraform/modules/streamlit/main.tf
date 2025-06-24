@@ -29,6 +29,8 @@ resource "null_resource" "build_push_image" {
 
 
 resource "google_cloud_run_v2_service" "streamlit" {
+  count = var.deploy_cloud_run ? 1 : 0
+  
   name     = var.cloud_run_service_name
   location = var.region
   project  = var.project_id
