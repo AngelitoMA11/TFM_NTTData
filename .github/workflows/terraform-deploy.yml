@@ -1,41 +1,68 @@
-name: Despliegue de Terraform en GCP
-description: Despliega infraestructura de Terraform en Google Cloud Platform (GCP) cuando se modifican archivos de Terraform.
+name: Deploy Terraform to GCP
 
 on:
   push:
-    paths:
-      - 'terraform/**'  # Solo si se modifican archivos de Terraform
+    branches:
+      - main
+
+permissions:
+  contents: read
+  id-token: write
 
 jobs:
-  deploy:
+  docker-build-push:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        image:
+          - name: streamlit
+            repo: streamlit
+            path: ./terraform/modules/streamlit/streamlit
+          # Añadir aquí más bloques si creas más imágenes
+          # - name: limpieza
+          #   repo: limpieza-repo
+          #   path: ./terraform/modules/limpieza
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Authenticate with GCP
+      - name: Authenticate to Google Cloud via Workload Identity Federation
+        id: auth
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: '${{ secrets.GCP_SA_KEY }}'  
+          token_format: 'access_token'
+          project_id: ${{ secrets.PROJECT_ID }}
+          workload_identity_provider: ${{ secrets.GITACTION }}
+          service_account: ${{ secrets.SERVICEACCOUNT }}
 
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v2
+      - name: Docker Auth to Artifact Registry
+        uses: docker/login-action@v1
         with:
-          terraform_version: 1.6.0
+          username: 'oauth2accesstoken'
+          password: '${{ steps.auth.outputs.access_token }}'
+          registry: 'europe-west1-docker.pkg.dev'
 
-      - name: Terraform Init
-        working-directory: terraform/
+      - name: Build and Push Docker image
+        run: |
+          docker build -t europe-west1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ matrix.image.repo }}/${{ matrix.image.name }}:latest ${{ matrix.image.path }}
+          docker push europe-west1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ matrix.image.repo }}/${{ matrix.image.name }}:latest
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Crear prod.tfvars desde secret
+        run: echo "${{ secrets.TFVARS_PROD }}" > ./terraform/prod.tfvars
+
+      - name: Init Terraform
         run: terraform init
+        working-directory: ./terraform
 
-      - name: Terraform Validate
-        working-directory: terraform/
-        run: terraform validate
+      - name: Plan Terraform
+        run: terraform plan -var-file="prod.tfvars"
+        working-directory: ./terraform
 
-      - name: Terraform Plan
-        working-directory: terraform/
-        run: terraform plan -out=tfplan
-
-      - name: Terraform Apply
-        working-directory: terraform/
-        run: terraform apply -auto-approve tfplan
+      - name: Apply Terraform
+        run: terraform apply -auto-approve -var-file="prod.tfvars"
+        working-directory: ./terraform
