@@ -1,0 +1,8 @@
+project_id      = "tfm-nttdata"
+region          = "europe-west1"
+zone            = "europe-west1-b"
+bq_dataset      = "NTTData"
+table_limpia    = "metricas"
+cloud_run_service_api_streamlit = "streamlit"
+repository_name_api_streamlit = "streamlit"
+image_name_api_streamlit = "streamlit"
