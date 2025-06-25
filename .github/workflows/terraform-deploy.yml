@@ -32,6 +32,10 @@ jobs:
       - name: Crear prod.tfvars
         run: echo "${{ secrets.TFVARS_PROD }}" > ./terraform/prod.tfvars
 
+      - name: Terraform Init
+        run: terraform init 
+        working-directory: ./terraform
+
       - name: Terraform Apply (solo repositorio)
         run: terraform apply -auto-approve -target=module.artifact -var-file="prod.tfvars" 
         working-directory: ./terraform
