@@ -1,0 +1,12 @@
+apiVersion: 1
+
+datasources:
+  - name: BigQuery
+    type: grafana-bigquery-datasource
+    access: proxy
+    isDefault: true
+    editable: true
+    jsonData:
+      authenticationType: "gce"
+      defaultProject: "tfm-nttdata"  # cambia por tu ID real
+      dataset: "NTTData"            # cambia por tu dataset real
