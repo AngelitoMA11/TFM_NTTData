@@ -19,12 +19,19 @@ module "bigquery" {
   ]
 }
 
+module "artifact" {
+  source      = "./modules/artifact"
+  project_id  = var.project_id
+  region      = var.region
+  repo_names  = [var.repository_name_api_streamlit]
+}
+
 module "function_limpieza" {
   source = "./modules/data/function_limpieza"
   project_id     = var.project_id
   region         = var.region
   name           = "limpieza"
-  entry_point    = "procesar_csv"
+  entry_point    = "main"
   env_variables  = {
     PROJECT_ID     = var.project_id
     DATASET        = var.bq_dataset
@@ -39,6 +46,8 @@ module "streamlit" {
   cloud_run_service_name = var.cloud_run_service_api_streamlit
   repository_name        = var.repository_name_api_streamlit
   image_name             = var.image_name_api_streamlit
+
+  depends_on             = [module.artifact]
 }
 
 module "injector" {

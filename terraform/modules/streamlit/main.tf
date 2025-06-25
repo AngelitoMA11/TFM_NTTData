@@ -1,17 +1,9 @@
-resource "google_artifact_registry_repository" "repo" {
-  project       = var.project_id
-  location      = var.region
-  repository_id = var.repository_name
-  format        = "DOCKER"
-}
-
 # Autenticación con Artifact Registry
 resource "null_resource" "docker_auth" {
   provisioner "local-exec" {
     command = "gcloud auth configure-docker ${var.region}-docker.pkg.dev"
   }
 
-  depends_on = [google_artifact_registry_repository.repo]
 }
 
 # Construcción de la imagen con Docker y push a Artifact Registry
@@ -29,8 +21,6 @@ resource "null_resource" "build_push_image" {
 
 
 resource "google_cloud_run_v2_service" "streamlit" {
-  count = var.deploy_cloud_run ? 1 : 0
-  
   name     = var.cloud_run_service_name
   location = var.region
   project  = var.project_id
