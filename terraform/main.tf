@@ -29,7 +29,7 @@ module "artifact" {
   source      = "./modules/artifact"
   project_id  = var.project_id
   region      = var.region
-  repo_names  = [var.repository_name_api_streamlit]
+  repo_names  = [var.repository_name_api_streamlit, var.repository_name_grafana]
 }
 
 module "function_limpieza" {
@@ -63,4 +63,17 @@ module "injector" {
   streamlit_name     = module.streamlit.streamlit_name
   function_limpieza  = module.function_limpieza.function_limpieza_url
   depends_on         = [module.streamlit, module.function_limpieza]
+}
+
+module "grafana" {
+  source           = "./modules/data/grafana"
+  project_id       = var.project_id
+  region           = var.region
+  password_grafana = var.password_grafana
+  user_grafana     = var.user_grafana
+  repository_id    = var.repository_name_grafana
+  grafana_name     = var.grafana_name
+  image_name       = var.image_name_grafana
+
+  depends_on = [ module.artifact ]
 }
