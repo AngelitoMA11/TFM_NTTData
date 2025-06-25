@@ -30,8 +30,7 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       # - name: Crear prod.tfvars
-      #   run: echo "${{ secrets.TFVARS_PROD }}" > ./terraform/prod.tfvars
-        
+      #   run: echo "${{ secrets.TFVARS_PROD }}" > ./terraform/prod.tfvars 
       - name: Terraform Init
         run: terraform init 
         working-directory: ./terraform
@@ -104,8 +103,9 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      # - name: Crear prod.tfvars
-      #   run: echo "${{ secrets.TFVARS_PROD }}" > ./terraform/prod.tfvars
+      - name: Terraform Init
+        run: terraform init 
+        working-directory: ./terraform
 
       - name: Terraform Apply
         working-directory: terraform/
