@@ -1,3 +1,9 @@
+terraform {
+  backend "gcs" {
+    bucket  = "tfm-bucket-nttdata"
+    prefix  = "estado" 
+  }
+}
 # module "gitaction" {
 #   source              = "./modules/gitaction"
 #   project_id          = var.project_id
