@@ -1,0 +1,286 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "grafana-bigquery-datasource",
+        "uid": "P0871A590F805E5CD"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-bigquery-datasource",
+            "uid": "P0871A590F805E5CD"
+          },
+          "editorMode": "code",
+          "format": 1,
+          "location": "",
+          "project": "tfm-nttdata",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  CONCAT(\r\n    CAST(FLOOR(Model_id / 5) * 5 AS STRING), \r\n    '–', \r\n    CAST(FLOOR(Model_id / 5) * 5 + 4 AS STRING)\r\n  ) AS rango_model_id,\r\n  COUNT(*) AS Ejecuciones\r\nFROM\r\n  `tfm-nttdata.NTTData.metricas`\r\nWHERE\r\n  Model_id IS NOT NULL\r\n  AND Oficina = '${Oficina}'\r\nGROUP BY\r\n  rango_model_id\r\nORDER BY\r\n  FLOOR(SAFE_CAST(SPLIT(rango_model_id, '–')[OFFSET(0)] AS INT64))\r\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Distribución de ejecuciones por oficina",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-bigquery-datasource",
+        "uid": "P0871A590F805E5CD"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "displayMode": "basic",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [],
+          "fields": "",
+          "values": true
+        },
+        "showUnfilled": true,
+        "valueMode": "color"
+      },
+      "pluginVersion": "9.5.15",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-bigquery-datasource",
+            "uid": "P0871A590F805E5CD"
+          },
+          "editorMode": "code",
+          "format": 1,
+          "location": "",
+          "project": "tfm-nttdata",
+          "rawQuery": true,
+          "rawSql": "WITH ejecuciones_por_modelo AS (\r\n  SELECT\r\n    Model_id,\r\n    COUNT(*) AS total_ejecuciones\r\n  FROM\r\n    `tfm-nttdata.NTTData.metricas`\r\n  WHERE\r\n    Model_id IS NOT NULL\r\n    AND Oficina = \"${Oficina}\"\r\n  GROUP BY\r\n    Model_id\r\n),\r\ntop3 AS (\r\n  SELECT * FROM ejecuciones_por_modelo\r\n  ORDER BY total_ejecuciones DESC\r\n  LIMIT 3\r\n),\r\nbottom3 AS (\r\n  SELECT * FROM ejecuciones_por_modelo\r\n  ORDER BY total_ejecuciones ASC\r\n  LIMIT 3\r\n)\r\n\r\nSELECT\r\n  CAST(Model_id AS STRING) AS model_label,\r\n  total_ejecuciones\r\nFROM (\r\n  SELECT * FROM top3\r\n  UNION ALL\r\n  SELECT * FROM bottom3\r\n)\r\nORDER BY total_ejecuciones DESC\r\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Panel Title",
+      "type": "bargauge"
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "Lisboa",
+          "value": "Lisboa"
+        },
+        "datasource": {
+          "type": "grafana-bigquery-datasource",
+          "uid": "P0871A590F805E5CD"
+        },
+        "definition": "",
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "Oficina",
+        "options": [],
+        "query": {
+          "editorMode": "code",
+          "format": 1,
+          "location": "",
+          "project": "tfm-nttdata",
+          "rawQuery": true,
+          "rawSql": "SELECT DISTINCT Oficina FROM `tfm-nttdata.NTTData.metricas`\r\n",
+          "refId": "tempvar",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Dashboard Dentro de oficinas",
+  "uid": "f4e8773c-3738-4daf-a681-4fb6efa06b75",
+  "version": 1,
+  "weekStart": ""
+}

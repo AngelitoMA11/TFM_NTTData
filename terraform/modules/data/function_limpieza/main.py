@@ -104,12 +104,36 @@ def recalcular_kpis(df):
     if {'cpt_per_mb', 'cpt_kg_co2', 'model_size_mb'}.issubset(df.columns):
         m = df['cpt_per_mb'].isna() & df['cpt_kg_co2'].notna() & df['model_size_mb'].notna()
         rellenar('cpt_per_mb', m, df.loc[m, 'cpt_kg_co2'] / df.loc[m, 'model_size_mb'])
+    if {'ce', 'mfs'}.issubset(df.columns):
+        df['indice_sostenibilidad'] = df.apply(
+            lambda row: row['ce'] / row['mfs'] if pd.notnull(row['ce']) and pd.notnull(row['mfs']) and row['mfs'] != 0 else None,
+            axis=1
+        )
 
     return df
 
 def insertar_en_bigquery(df):
     client = bigquery.Client(project=PROJECT_ID)
     table_id = f"{PROJECT_ID}.{DATASET}.{TABLE}"
+    
+    # Claves únicas para comparar duplicados
+    claves = ["Model_id", "Execution_id"]
+
+    # Leer claves existentes desde BigQuery
+    query = f"""
+        SELECT {', '.join(claves)}
+        FROM `{table_id}`
+    """
+    try:
+        existentes = client.query(query).to_dataframe()
+        df = df.merge(existentes, on=claves, how='left', indicator=True)
+        df = df[df['_merge'] == 'left_only'].drop(columns=['_merge'])
+    except Exception as e:
+        logging.warning(f"No se pudo leer claves existentes: {e}. Se insertarán todos los registros.")
+
+    if df.empty:
+        logging.info("No hay registros nuevos para insertar.")
+        return "No se insertó ningún registro: todos eran duplicados."
 
     job_config = bigquery.LoadJobConfig(
         write_disposition=bigquery.WriteDisposition.WRITE_APPEND,
@@ -149,19 +173,32 @@ def main(request: Request):
 
         logging.info("Renombrando columnas")
         columnas_a_renombrar = {
-            'execution_id': 'Execution_id', 'model_id': 'Model_id',
-            'execution_day': 'Execution_day', 'execution_time': 'Execution_time',
-            'oficina': 'Oficina', 'power_usage_w': 'Power_usage_w',
-            'duration_epoch_h': 'Duration_epoch_h', 'num_epochs': 'Num_epochs',
+            'execution_id': 'Execution_id', 
+            'model_id': 'Model_id',
+            'execution_day': 'Execution_day', 
+            'execution_time': 'Execution_time',
+            'oficina': 'Oficina', 
+            'power_usage_w': 'Power_usage_w',
+            'duration_epoch_h': 'Duration_epoch_h', 
+            'num_epochs': 'Num_epochs',
             'emission_factor_location': 'Emission_factor_location',
             'total_inference_energy_wh': 'Total_inference_energy_wh',
-            'num_predictions': 'Num_predictions', 'model_accuracy': 'Model_accuracy',
-            'total_data': 'Total_data', 'data_used': 'Data_used',
-            'model_size_mb': 'Model_size_mb', 'energy_epoch_wh': 'Energy_epoch_Wh',
-            'ept_kwh': 'EPT_kwh', 'cpt_kg_co2': 'CPT_kg_co2', 'epp_wh': 'Epp_wh',
-            'ce': 'Carbon_efficiency', 'dwr': 'Data_Waste_Ratio',
-            'mfs': 'Model_Footprint_Score', 'ept_per_mb': 'EPT_per_mb',
-            'cpt_per_mb': 'CPT_per_mb'
+            'num_predictions': 'Num_predictions', 
+            'model_accuracy': 'Model_accuracy',
+            'total_data': 'Total_data', 
+            'data_used': 'Data_used',
+            'model_size_mb': 'Model_size_mb', 
+            'energy_epoch_wh': 'Energy_epoch_Wh',
+            'ept_kwh': 'EPT_kwh', 
+            'cpt_kg_co2': 'CPT_kg_co2', 
+            'epp_wh': 'Epp_wh',
+            'ce': 'Carbon_efficiency', 
+            'dwr': 'Data_Waste_Ratio',
+            'mfs': 'Model_Footprint_Score', 
+            'ept_per_mb': 'EPT_per_mb',
+            'cpt_per_mb': 'CPT_per_mb',
+            'indice_sostenibilidad': 'Indice_Sostenibilidad'
+
         }
         df.rename(columns={k: v for k, v in columnas_a_renombrar.items() if k in df.columns}, inplace=True)
 

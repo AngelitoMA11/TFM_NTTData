@@ -67,3 +67,30 @@ variable "user_grafana" {
 variable "password_grafana" {
   type = string
 }
+variable "vpc_network" {
+  description = "Nombre de la red VPC donde se desplegarán los recursos."
+  type        = string
+}
+variable "subnet_name" {
+  description = "Nombre de la subred donde se desplegarán los recursos."
+  type        = string
+}
+
+variable "cloud_run_service_api_chatbot" {
+  description = "Nombre del servicio de Cloud Run para el servicio de datos"
+  type        = string
+}
+
+variable "repository_name_api_chatbot" {
+  description = "Nombre del repositorio de Artifact Registry donde está la imagen"
+  type        = string
+}
+
+variable "image_name_api_chatbot" {
+  description = "Nombre de la imagen de contenedor (incluye tag si aplica)"
+  type        = string
+}
+variable "gemini_api_key" {
+  description = "Clave de la API de Gemini (Vertex AI)"
+  type        = string
+}

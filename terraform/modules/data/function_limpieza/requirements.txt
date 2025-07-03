@@ -2,3 +2,4 @@ pandas
 google-cloud-bigquery
 flask
 pyarrow
+db-dtypes

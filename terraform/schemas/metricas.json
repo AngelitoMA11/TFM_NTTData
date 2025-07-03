@@ -22,5 +22,6 @@
   {"name": "Data_Waste_Ratio", "type": "FLOAT64", "mode": "NULLABLE"},
   {"name": "Model_Footprint_Score", "type": "FLOAT64", "mode": "NULLABLE"},
   {"name": "EPT_per_mb", "type": "FLOAT64", "mode": "NULLABLE"},
-  {"name": "CPT_per_mb", "type": "FLOAT64", "mode": "NULLABLE"}
+  {"name": "CPT_per_mb", "type": "FLOAT64", "mode": "NULLABLE"},
+  {"name": "Indice_Sostenibilidad", "type": "FLOAT64", "mode": "NULLABLE"}
 ]

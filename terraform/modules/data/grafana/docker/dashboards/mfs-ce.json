@@ -18,20 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "links": [
-    {
-      "asDropdown": false,
-      "icon": "dashboard",
-      "includeVars": false,
-      "keepTime": false,
-      "tags": [],
-      "targetBlank": false,
-      "title": "New link",
-      "tooltip": "",
-      "type": "link",
-      "url": ""
-    }
-  ],
+  "links": [],
   "liveNow": false,
   "panels": [
     {
@@ -45,105 +32,11 @@
             "mode": "palette-classic"
           },
           "custom": {
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            }
-          },
-          "links": [
-            {
-              "targetBlank": true,
-              "title": "Oficinas",
-              "url": "/d/f4e8773c-3738-4daf-a681-4fb6efa06b75?orgId=1&var-Oficina=${__data.fields.Oficina}\r\n\r\n"
-            }
-          ],
-          "mappings": []
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 12,
-        "w": 7,
-        "x": 0,
-        "y": 0
-      },
-      "id": 3,
-      "options": {
-        "displayLabels": [
-          "percent"
-        ],
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "pieType": "pie",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.0.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "grafana-bigquery-datasource",
-            "uid": "P0871A590F805E5CD"
-          },
-          "editorMode": "code",
-          "format": 1,
-          "location": "",
-          "project": "tfm-nttdata",
-          "rawQuery": true,
-          "rawSql": "SELECT\r\n  Oficina,\r\n  COUNT(*) AS total_ejecuciones\r\nFROM\r\n  `tfm-nttdata.NTTData.metricas`\r\nGROUP BY\r\n  Oficina\r\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Numero de ejecuciones por oficina",
-      "type": "piechart"
-    },
-    {
-      "datasource": {
-        "type": "grafana-bigquery-datasource",
-        "uid": "P0871A590F805E5CD"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
             "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
-            "axisLabel": "EJECUCIONES",
-            "axisPlacement": "left",
+            "axisLabel": "",
+            "axisPlacement": "auto",
             "fillOpacity": 80,
             "gradientMode": "none",
             "hideFrom": {
@@ -159,13 +52,6 @@
               "mode": "off"
             }
           },
-          "links": [
-            {
-              "targetBlank": false,
-              "title": "Conjunto de modelos",
-              "url": "/d/ba403d81-89ff-47f9-aca0-97ae7164a333/detalle?orgId=1&var-Oficina=${__data.fields.Oficina}"
-            }
-          ],
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -175,80 +61,31 @@
                 "value": null
               },
               {
-                "color": "dark-red",
-                "value": 0
-              },
-              {
-                "color": "semi-dark-blue",
-                "value": 800
-              },
-              {
-                "color": "dark-green",
-                "value": 1000
+                "color": "red",
+                "value": 80
               }
             ]
           }
         },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Ejecuciones"
-            },
-            "properties": [
-              {
-                "id": "thresholds",
-                "value": {
-                  "mode": "absolute",
-                  "steps": [
-                    {
-                      "color": "green",
-                      "value": null
-                    },
-                    {
-                      "color": "semi-dark-red",
-                      "value": 0
-                    },
-                    {
-                      "color": "blue",
-                      "value": 850
-                    },
-                    {
-                      "color": "dark-green",
-                      "value": 1000
-                    }
-                  ]
-                }
-              },
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-green",
-                  "mode": "thresholds"
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
-        "h": 12,
-        "w": 16,
-        "x": 7,
+        "h": 8,
+        "w": 12,
+        "x": 0,
         "y": 0
       },
-      "id": 4,
+      "id": 3,
       "options": {
         "barRadius": 0,
         "barWidth": 0.97,
-        "colorByField": "Ejecuciones",
         "fullHighlight": false,
         "groupWidth": 0.7,
         "legend": {
           "calcs": [],
-          "displayMode": "table",
+          "displayMode": "list",
           "placement": "bottom",
-          "showLegend": false
+          "showLegend": true
         },
         "orientation": "auto",
         "showValue": "auto",
@@ -257,7 +94,7 @@
           "mode": "single",
           "sort": "none"
         },
-        "xField": "rango_model_id",
+        "xField": "Model_id",
         "xTickLabelRotation": 0,
         "xTickLabelSpacing": 0
       },
@@ -272,14 +109,10 @@
           "location": "",
           "project": "tfm-nttdata",
           "rawQuery": true,
-          "rawSql": "SELECT\r\n  CONCAT(\r\n    CAST(FLOOR(Model_id / 5) * 5 AS STRING), \r\n    '–', \r\n    CAST(FLOOR(Model_id / 5) * 5 + 4 AS STRING)\r\n  ) AS rango_model_id,\r\n  COUNT(*) AS Ejecuciones\r\nFROM\r\n  tfm-nttdata.NTTData.metricas\r\nWHERE\r\n  Model_id IS NOT NULL\r\nGROUP BY\r\n  rango_model_id\r\nORDER BY\r\n  FLOOR(SAFE_CAST(SPLIT(rango_model_id, '–')[OFFSET(0)] AS INT64))",
+          "rawSql": "SELECT\r\n  Model_id,\r\n  ROUND(AVG(Model_Footprint_Score), 4) AS MFS_media\r\nFROM\r\n  `tfm-nttdata.NTTData.metricas`\r\nWHERE\r\n  Model_Footprint_Score IS NOT NULL\r\nGROUP BY\r\n  Model_id\r\nORDER BY\r\n  MFS_media DESC\r\n",
           "refId": "A",
           "sql": {
             "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              },
               {
                 "parameters": [],
                 "type": "function"
@@ -297,8 +130,128 @@
           }
         }
       ],
-      "title": "Distribución de ejecuciones por grupos de modelos",
+      "title": "MFS por modelo",
       "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-bigquery-datasource",
+        "uid": "P0871A590F805E5CD"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "series",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "pointSize": {
+              "fixed": 7
+            },
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "show": "points"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 11,
+        "x": 12,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "dims": {
+          "exclude": [
+            "Model_id",
+            "MFS"
+          ],
+          "frame": 0,
+          "x": "MFS"
+        },
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "series": [
+          {
+            "pointColor": {
+              "field": "Etiqueta",
+              "fixed": "dark-green"
+            },
+            "pointSize": {
+              "fixed": 8,
+              "max": 9,
+              "min": 1
+            },
+            "x": "MFS",
+            "y": "CE"
+          }
+        ],
+        "seriesMapping": "manual",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-bigquery-datasource",
+            "uid": "P0871A590F805E5CD"
+          },
+          "editorMode": "code",
+          "format": 1,
+          "location": "",
+          "project": "tfm-nttdata",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  Oficina,\r\n  Model_id,\r\n  CONCAT('Modelo ', CAST(Model_id AS STRING), ' - ', Oficina) AS Etiqueta,\r\n  ROUND(AVG(Carbon_efficiency), 4) AS CE,\r\n  ROUND(AVG(Model_Footprint_Score), 4) AS MFS\r\nFROM `tfm-nttdata.NTTData.metricas`\r\nWHERE\r\n  Carbon_efficiency IS NOT NULL\r\n  AND Model_Footprint_Score IS NOT NULL\r\n  AND LOWER(TRIM(Oficina)) != 'desconocido'\r\n  AND TRIM(Oficina) != ''\r\nGROUP BY Oficina, Model_id\r\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "MFS i CE por modelo",
+      "type": "xychart"
     },
     {
       "datasource": {
@@ -344,18 +297,17 @@
                 "value": 80
               }
             ]
-          },
-          "unit": "short"
+          }
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 11,
-        "w": 11,
+        "h": 9,
+        "w": 12,
         "x": 0,
-        "y": 12
+        "y": 8
       },
-      "id": 5,
+      "id": 2,
       "options": {
         "barRadius": 0,
         "barWidth": 0.97,
@@ -367,17 +319,17 @@
           "placement": "bottom",
           "showLegend": true
         },
-        "orientation": "horizontal",
-        "showValue": "never",
+        "orientation": "auto",
+        "showValue": "auto",
         "stacking": "none",
         "tooltip": {
           "mode": "single",
           "sort": "none"
         },
+        "xField": "Model_id",
         "xTickLabelRotation": 0,
         "xTickLabelSpacing": 0
       },
-      "pluginVersion": "9.5.15",
       "targets": [
         {
           "datasource": {
@@ -389,7 +341,7 @@
           "location": "",
           "project": "tfm-nttdata",
           "rawQuery": true,
-          "rawSql": "SELECT\r\n  FORMAT_DATE('%Y-%m', DATE_TRUNC(Execution_day, MONTH)) AS mes,\r\n  COUNT(*) AS Ejecuciones\r\nFROM\r\n  tfm-nttdata.NTTData.metricas\r\nWHERE\r\n  Execution_day IS NOT NULL\r\nGROUP BY\r\n  mes\r\nORDER BY\r\n  mes\r\n",
+          "rawSql": "SELECT\r\n  Model_id,\r\n  ROUND(AVG(Carbon_efficiency), 4) AS CE_media\r\nFROM\r\n  `tfm-nttdata.NTTData.metricas`\r\nWHERE\r\n  Carbon_efficiency IS NOT NULL\r\nGROUP BY\r\n  Model_id\r\nORDER BY\r\n  CE_media DESC\r\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -410,7 +362,7 @@
           }
         }
       ],
-      "title": "Ejecuciones por mes",
+      "title": "CE por modelo",
       "type": "barchart"
     },
     {
@@ -422,6 +374,27 @@
         "defaults": {
           "color": {
             "mode": "continuous-GrYlRd"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "hue",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
           "mappings": [],
           "thresholds": {
@@ -441,31 +414,38 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 11,
-        "w": 12,
-        "x": 11,
+        "h": 8,
+        "w": 11,
+        "x": 12,
         "y": 12
       },
-      "id": 6,
+      "id": 4,
       "options": {
-        "displayMode": "basic",
-        "maxVizHeight": 300,
-        "minVizHeight": 10,
-        "minVizWidth": 0,
-        "namePlacement": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
           "calcs": [],
-          "fields": "",
-          "values": true
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
         },
-        "showUnfilled": true,
-        "sizing": "auto",
-        "valueMode": "color"
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "normal",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "xField": "Model_id",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
       },
       "pluginVersion": "10.4.0",
       "targets": [
         {
+          "dataset": "NTTData",
           "datasource": {
             "type": "grafana-bigquery-datasource",
             "uid": "P0871A590F805E5CD"
@@ -475,12 +455,18 @@
           "location": "",
           "project": "tfm-nttdata",
           "rawQuery": true,
-          "rawSql": "WITH ejecuciones_por_modelo AS (\r\n  SELECT\r\n    Model_id,\r\n    COUNT(*) AS total_ejecuciones\r\n  FROM\r\n    `tfm-nttdata.NTTData.metricas`\r\n  WHERE\r\n    Model_id IS NOT NULL\r\n  GROUP BY\r\n    Model_id\r\n),\r\ntop3 AS (\r\n  SELECT * FROM ejecuciones_por_modelo\r\n  ORDER BY total_ejecuciones DESC\r\n  LIMIT 3\r\n),\r\nbottom3 AS (\r\n  SELECT * FROM ejecuciones_por_modelo\r\n  ORDER BY total_ejecuciones ASC\r\n  LIMIT 3\r\n)\r\n\r\nSELECT\r\n  CAST(Model_id AS STRING) AS model_label,\r\n  total_ejecuciones\r\nFROM (\r\n  SELECT * FROM top3\r\n  UNION ALL\r\n  SELECT * FROM bottom3\r\n)\r\nORDER BY total_ejecuciones DESC\r\n",
+          "rawSql": "SELECT *\r\nFROM (\r\n  SELECT\r\n    Model_id,\r\n    ROUND(AVG(Indice_Sostenibilidad), 2) AS Sostenibilidad_media\r\n  FROM `tfm-nttdata.NTTData.metricas`\r\n  WHERE Indice_Sostenibilidad IS NOT NULL\r\n  GROUP BY Model_id\r\n  ORDER BY Sostenibilidad_media DESC\r\n  LIMIT 3\r\n)\r\nUNION ALL\r\nSELECT *\r\nFROM (\r\n  SELECT\r\n    Model_id,\r\n    ROUND(AVG(Indice_Sostenibilidad), 2) AS Sostenibilidad_media\r\n  FROM `tfm-nttdata.NTTData.metricas`\r\n  WHERE Indice_Sostenibilidad IS NOT NULL\r\n  GROUP BY Model_id\r\n  ORDER BY Sostenibilidad_media ASC\r\n  LIMIT 3\r\n)\r\nORDER BY Sostenibilidad_media DESC\r\n",
           "refId": "A",
           "sql": {
             "columns": [
               {
-                "parameters": [],
+                "name": "ANY_VALUE",
+                "parameters": [
+                  {
+                    "name": "Indice_Sostenibilidad",
+                    "type": "functionParameter"
+                  }
+                ],
                 "type": "function"
               }
             ],
@@ -493,76 +479,28 @@
               }
             ],
             "limit": 50
-          }
+          },
+          "table": "metricas"
         }
       ],
-      "title": "Modelos con mas y menos ejecuciones",
-      "type": "bargauge"
+      "title": "Modelos con mayor y menor media en indices de sostenibilidad ",
+      "type": "barchart"
     }
   ],
   "refresh": "",
   "schemaVersion": 39,
   "tags": [],
   "templating": {
-    "list": [
-      {
-        "current": {
-          "selected": false,
-          "text": "Braga",
-          "value": "Braga"
-        },
-        "datasource": {
-          "type": "grafana-bigquery-datasource",
-          "uid": "P0871A590F805E5CD"
-        },
-        "definition": "",
-        "hide": 0,
-        "includeAll": false,
-        "multi": false,
-        "name": "Oficina",
-        "options": [],
-        "query": {
-          "editorMode": "code",
-          "format": 1,
-          "location": "",
-          "project": "tfm-nttdata",
-          "rawQuery": true,
-          "rawSql": "SELECT DISTINCT Oficina FROM `tfm-nttdata.NTTData.metricas`\r\n",
-          "refId": "tempvar",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        },
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 1,
-        "type": "query"
-      }
-    ]
+    "list": []
   },
   "time": {
-    "from": "now-6h",
-    "to": "now"
+    "from": "2025-07-01T06:16:04.523Z",
+    "to": "2025-07-02T06:16:04.523Z"
   },
   "timepicker": {},
-  "timezone": "browser",
-  "title": "Media de predicciones",
-  "uid": "67d0fb9b-e5c1-4d95-9339-04475a3116e1",
+  "timezone": "",
+  "title": "MFS i CE Copy",
+  "uid": "d30375d3-cfb5-4cae-ad21-338b09a7a129",
   "version": 1,
   "weekStart": ""
 }
