@@ -53,7 +53,7 @@ module "streamlit" {
   cloud_run_service_name = var.cloud_run_service_api_streamlit
   repository_name        = var.repository_name_api_streamlit
   image_name             = var.image_name_api_streamlit
-
+  firestore_database     = var.firestore_name
   depends_on             = [module.artifact]
 }
 
@@ -115,6 +115,14 @@ module "vpc_connector" {
 
   
 }
+
+# module "firestore" {
+#   source      = "./modules/chatbot/firestore"
+#   project_id  = var.project_id
+#   name        = var.firestore_name
+#   location_id = var.region
+#   type        = "FIRESTORE_NATIVE"
+# }
 
 module "chatbot" {
   source                 = "./modules/chatbot/agente"

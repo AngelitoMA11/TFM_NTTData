@@ -43,7 +43,7 @@ resource "google_compute_instance" "chroma_vm" {
     access_config {}  
   }
 
-  tags = ["chroma", "ssh-access"]
+  tags = ["chroma"]
   
 }
 

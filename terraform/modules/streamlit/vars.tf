@@ -30,11 +30,9 @@ variable "env_vars" {
   default     = {}
 }
 
-variable "deploy_cloud_run" {
-  type    = bool
+variable "firestore_database" {
   default = true
 }
-
 
 
 

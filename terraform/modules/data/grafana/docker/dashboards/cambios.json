@@ -18,95 +18,9 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
+  "id": 6,
   "links": [],
-  "liveNow": false,
   "panels": [
-    {
-      "datasource": {
-        "type": "grafana-bigquery-datasource",
-        "uid": "P0871A590F805E5CD"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "#ac4d94",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 2,
-        "x": 0,
-        "y": 0
-      },
-      "id": 8,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "10.4.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "grafana-bigquery-datasource",
-            "uid": "P0871A590F805E5CD"
-          },
-          "editorMode": "code",
-          "format": 1,
-          "location": "",
-          "project": "tfm-nttdata",
-          "rawQuery": true,
-          "rawSql": "SELECT COUNT(DISTINCT Oficina)  AS oficinas_activas\r\nFROM `tfm-nttdata.NTTData.metricas`\r\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Oficinas",
-      "type": "stat"
-    },
     {
       "datasource": {
         "type": "grafana-bigquery-datasource",
@@ -119,8 +33,8 @@
           },
           "links": [
             {
-              "title": "",
-              "url": "/d/67d0fb9b-e5c1-4d95-9339-04475a3116e1/media-de-predicciones?orgId=1"
+              "title": "Ejecuciones",
+              "url": "/d/72f28c4b-577c-49b4-8b32-772725591897/ejecuciones-y-predicciones?orgId=1"
             }
           ],
           "mappings": [],
@@ -128,31 +42,30 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "yellow"
               },
               {
-                "color": "semi-dark-blue",
+                "color": "red",
                 "value": 80
               }
             ]
-          },
-          "unit": "locale"
+          }
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 5,
-        "w": 4,
-        "x": 2,
+        "h": 6,
+        "w": 3,
+        "x": 0,
         "y": 0
       },
-      "id": 1,
+      "id": 2,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -164,7 +77,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.0",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "dataset": "NTTData",
@@ -172,19 +85,20 @@
             "type": "grafana-bigquery-datasource",
             "uid": "P0871A590F805E5CD"
           },
-          "editorMode": "builder",
+          "editorMode": "code",
           "format": 1,
           "location": "",
           "project": "tfm-nttdata",
-          "rawSql": "SELECT COUNT(Execution_id) FROM `tfm-nttdata.NTTData.metricas` LIMIT 50 ",
+          "rawQuery": true,
+          "rawSql": "SELECT COUNT(DISTINCT Oficina)  AS oficinas_activas\r\nFROM `tfm-nttdata.NTTData.metricas`\r\nWHERE Oficina IN UNNEST([${Oficina}])",
           "refId": "A",
           "sql": {
             "columns": [
               {
-                "name": "COUNT",
+                "name": "MAX",
                 "parameters": [
                   {
-                    "name": "Execution_id",
+                    "name": "Oficina",
                     "type": "functionParameter"
                   }
                 ],
@@ -204,7 +118,7 @@
           "table": "metricas"
         }
       ],
-      "title": "Número de ejecuciones",
+      "title": "Número de oficinas",
       "type": "stat"
     },
     {
@@ -222,8 +136,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "#3d6138",
-                "value": null
+                "color": "yellow"
               },
               {
                 "color": "red",
@@ -235,17 +148,18 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 5,
-        "w": 2,
-        "x": 6,
+        "h": 6,
+        "w": 3,
+        "x": 3,
         "y": 0
       },
-      "id": 7,
+      "id": 3,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -257,10 +171,9 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.0",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
-          "dataset": "NTTData",
           "datasource": {
             "type": "grafana-bigquery-datasource",
             "uid": "P0871A590F805E5CD"
@@ -275,13 +188,7 @@
           "sql": {
             "columns": [
               {
-                "name": "COUNT",
-                "parameters": [
-                  {
-                    "name": "Model_id",
-                    "type": "functionParameter"
-                  }
-                ],
+                "parameters": [],
                 "type": "function"
               }
             ],
@@ -294,11 +201,10 @@
               }
             ],
             "limit": 50
-          },
-          "table": "metricas"
+          }
         }
       ],
-      "title": "Modelos",
+      "title": "Número de modelos",
       "type": "stat"
     },
     {
@@ -309,165 +215,82 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "continuous-YlBl"
+            "fixedColor": "semi-dark-blue",
+            "mode": "continuous-BlPu"
           },
-          "links": [
-            {
-              "targetBlank": true,
-              "title": "",
-              "url": "/d/be3186d5-34f7-44a1-9cdd-b65de59473d6/epp-y-total-predicciones"
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": false,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 100,
+            "gradientMode": "hue",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
             }
-          ],
+          },
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "dark-orange",
-                "value": null
+                "color": "blue"
               },
               {
-                "color": "yellow",
+                "color": "red",
                 "value": 80
               }
             ]
-          },
-          "unit": "locale"
+          }
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 5,
-        "w": 7,
-        "x": 8,
+        "h": 8,
+        "w": 13,
+        "x": 6,
         "y": 0
       },
-      "id": 2,
+      "id": 5,
       "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
         },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "10.4.0",
-      "targets": [
-        {
-          "dataset": "NTTData",
-          "datasource": {
-            "type": "grafana-bigquery-datasource",
-            "uid": "P0871A590F805E5CD"
-          },
-          "editorMode": "builder",
-          "format": 1,
-          "location": "",
-          "project": "tfm-nttdata",
-          "rawQuery": true,
-          "rawSql": "SELECT SUM(Num_predictions) FROM `tfm-nttdata.NTTData.metricas` LIMIT 50 ",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "name": "SUM",
-                "parameters": [
-                  {
-                    "name": "Num_predictions",
-                    "type": "functionParameter"
-                  }
-                ],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          },
-          "table": "metricas"
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
         }
-      ],
-      "title": "Total de predicciones",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "grafana-bigquery-datasource",
-        "uid": "P0871A590F805E5CD"
       },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "links": [
-            {
-              "targetBlank": true,
-              "title": "",
-              "url": "/d/f92643bd-3078-4bf3-84c2-f1576428cff9/prueba?orgId=1"
-            }
-          ],
-          "mappings": [],
-          "thresholds": {
-            "mode": "percentage",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "dark-red",
-                "value": 79.4
-              },
-              {
-                "color": "transparent",
-                "value": 100
-              }
-            ]
-          },
-          "unit": "percent"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 4,
-        "x": 15,
-        "y": 0
-      },
-      "id": 3,
-      "options": {
-        "minVizHeight": 75,
-        "minVizWidth": 75,
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": true
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
-        "sizing": "auto"
-      },
-      "pluginVersion": "10.4.0",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
-          "dataset": "NTTData",
           "datasource": {
             "type": "grafana-bigquery-datasource",
             "uid": "P0871A590F805E5CD"
@@ -477,18 +300,12 @@
           "location": "",
           "project": "tfm-nttdata",
           "rawQuery": true,
-          "rawSql": "SELECT AVG(Model_accuracy) * 100 FROM `tfm-nttdata.NTTData.metricas` LIMIT 50 ",
+          "rawSql": "SELECT\r\n  TIMESTAMP(DATE_TRUNC(Execution_day, MONTH)) AS time,\r\n  SUM(Total_inference_energy_wh) / 1000 AS Energia_total_kWh\r\nFROM `tfm-nttdata.NTTData.metricas`\r\nWHERE Execution_day IS NOT NULL\r\n  AND Oficina IN UNNEST([${Oficina}])\r\nGROUP BY\r\n  time\r\nORDER BY\r\n  time\r\n",
           "refId": "A",
           "sql": {
             "columns": [
               {
-                "name": "AVG",
-                "parameters": [
-                  {
-                    "name": "Model_accuracy",
-                    "type": "functionParameter"
-                  }
-                ],
+                "parameters": [],
                 "type": "function"
               }
             ],
@@ -501,12 +318,11 @@
               }
             ],
             "limit": 50
-          },
-          "table": "metricas"
+          }
         }
       ],
-      "title": "Porcentaje de acierto",
-      "type": "gauge"
+      "title": "Desglose de la energia gastada por mes",
+      "type": "timeseries"
     },
     {
       "datasource": {
@@ -518,16 +334,21 @@
           "color": {
             "mode": "thresholds"
           },
+          "links": [
+            {
+              "title": "EPT-Interior",
+              "url": "/d/ber0h8xem5gcgb/ept-interior?orgId=1"
+            }
+          ],
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "blue"
               },
               {
-                "color": "red",
+                "color": "light-blue",
                 "value": 80
               }
             ]
@@ -537,116 +358,18 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 5,
-        "w": 4,
+        "h": 8,
+        "w": 5,
         "x": 19,
         "y": 0
       },
-      "id": 9,
+      "id": 4,
       "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "center",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "10.4.0",
-      "targets": [
-        {
-          "dataset": "NTTData",
-          "datasource": {
-            "type": "grafana-bigquery-datasource",
-            "uid": "P0871A590F805E5CD"
-          },
-          "editorMode": "code",
-          "format": 1,
-          "location": "",
-          "project": "tfm-nttdata",
-          "rawSql": "SELECT SUM(EPT_kwh) FROM `tfm-nttdata.NTTData.metricas` LIMIT 50 ",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "name": "SUM",
-                "parameters": [
-                  {
-                    "name": "EPT_kwh",
-                    "type": "functionParameter"
-                  }
-                ],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          },
-          "table": "metricas"
-        }
-      ],
-      "title": "EPT utilizada",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "grafana-bigquery-datasource",
-        "uid": "P0871A590F805E5CD"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "links": [
-            {
-              "title": "",
-              "url": "/d/be3186d5-34f7-44a1-9cdd-b65de59473d6/epp-y-total-predicciones"
-            }
-          ],
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "semi-dark-orange",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 4,
-        "x": 0,
-        "y": 5
-      },
-      "id": 6,
-      "options": {
-        "colorMode": "value",
+        "colorMode": "background",
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -655,13 +378,12 @@
           "values": false
         },
         "showPercentChange": false,
-        "textMode": "auto",
+        "textMode": "value",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.0",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
-          "dataset": "NTTData",
           "datasource": {
             "type": "grafana-bigquery-datasource",
             "uid": "P0871A590F805E5CD"
@@ -671,7 +393,7 @@
           "location": "",
           "project": "tfm-nttdata",
           "rawQuery": true,
-          "rawSql": "SELECT AVG(Epp_wh)  FROM `tfm-nttdata.NTTData.metricas` LIMIT 50 ",
+          "rawSql": "SELECT SUM(EPT_kwh)\r\nFROM `tfm-nttdata.NTTData.metricas` \r\nWHERE Execution_day IS NOT NULL\r\n  AND Oficina IN UNNEST([${Oficina}])",
           "refId": "A",
           "sql": {
             "columns": [
@@ -689,11 +411,10 @@
               }
             ],
             "limit": 50
-          },
-          "table": "metricas"
+          }
         }
       ],
-      "title": "EPP Promedio",
+      "title": "Energia utilizada",
       "type": "stat"
     },
     {
@@ -706,54 +427,131 @@
           "color": {
             "mode": "thresholds"
           },
-          "links": [
-            {
-              "title": "",
-              "url": "/d/be3186d5-34f7-44a1-9cdd-b65de59473d6/epp-y-total-predicciones?orgId=1"
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
             }
-          ],
+          },
+          "links": [],
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "yellow"
               },
               {
                 "color": "red",
                 "value": 80
               }
             ]
-          },
-          "unit": "watth"
+          }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Oficina"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Filtrar por esta oficina",
+                    "url": "/d/${__dashboard.uid}/${__dashboard.slug}?var-Oficina=${__data.fields.Oficina}\r\n"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
-        "h": 5,
-        "w": 5,
-        "x": 4,
-        "y": 5
+        "h": 18,
+        "w": 6,
+        "x": 0,
+        "y": 6
       },
-      "id": 4,
+      "id": 1,
       "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
+        "basemap": {
+          "config": {},
+          "name": "Layer 0",
+          "type": "default"
         },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
+        "controls": {
+          "mouseWheelZoom": true,
+          "showAttribution": false,
+          "showDebug": false,
+          "showMeasure": false,
+          "showScale": false,
+          "showZoom": true
+        },
+        "layers": [
+          {
+            "config": {
+              "showLegend": false,
+              "style": {
+                "color": {
+                  "field": "oficina_id",
+                  "fixed": "dark-green"
+                },
+                "opacity": 1,
+                "rotation": {
+                  "fixed": 0,
+                  "max": 360,
+                  "min": -360,
+                  "mode": "mod"
+                },
+                "size": {
+                  "fixed": 10,
+                  "max": 15,
+                  "min": 2
+                },
+                "symbol": {
+                  "fixed": "img/icons/marker/circle.svg",
+                  "mode": "fixed"
+                },
+                "symbolAlign": {
+                  "horizontal": "center",
+                  "vertical": "center"
+                },
+                "text": {
+                  "field": "Oficina",
+                  "fixed": "",
+                  "mode": "fixed"
+                },
+                "textConfig": {
+                  "offsetX": 0,
+                  "offsetY": 0,
+                  "textAlign": "center",
+                  "textBaseline": "middle"
+                }
+              }
+            },
+            "location": {
+              "mode": "auto"
+            },
+            "name": "Layer 1",
+            "tooltip": true,
+            "type": "markers"
+          }
+        ],
+        "tooltip": {
+          "mode": "details"
+        },
+        "view": {
+          "allLayers": true,
+          "id": "coords",
+          "lat": 39.379387,
+          "lon": -1.696818,
+          "zoom": 5.98
+        }
       },
-      "pluginVersion": "10.4.0",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "dataset": "NTTData",
@@ -766,15 +564,14 @@
           "location": "",
           "project": "tfm-nttdata",
           "rawQuery": true,
-          "rawSql": "SELECT SUM(Total_inference_energy_wh)/1000 FROM `tfm-nttdata.NTTData.metricas`",
+          "rawSql": "SELECT\r\n  Oficina,\r\n  DENSE_RANK() OVER (ORDER BY Oficina) AS oficina_id,\r\n  AVG(Latitud) AS latitude,\r\n  AVG(Longitud) AS longitude\r\nFROM\r\n  `tfm-nttdata.NTTData.metricas`\r\nWHERE\r\n  Latitud IS NOT NULL\r\n  AND Longitud IS NOT NULL\r\nGROUP BY\r\n  Oficina\r\n",
           "refId": "A",
           "sql": {
             "columns": [
               {
-                "name": "SUM",
                 "parameters": [
                   {
-                    "name": "Total_inference_energy_wh",
+                    "name": "Longitud",
                     "type": "functionParameter"
                   }
                 ],
@@ -794,8 +591,8 @@
           "table": "metricas"
         }
       ],
-      "title": "Energia de inferencia",
-      "type": "stat"
+      "title": "Distribución de oficinas",
+      "type": "geomap"
     },
     {
       "datasource": {
@@ -807,10 +604,9 @@
           "color": {
             "mode": "thresholds"
           },
-          "decimals": 0,
           "links": [
             {
-              "title": "",
+              "title": "CPT interior",
               "url": "/d/d5e39d73-6da7-47f0-b28d-48fa8f9c3cdc/cpt-interior?orgId=1"
             }
           ],
@@ -819,31 +615,31 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "blue"
               },
               {
-                "color": "#a8a8a8",
+                "color": "light-red",
                 "value": 80
               }
             ]
           },
-          "unit": "kg CO2"
+          "unit": "CO2"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 5,
-        "w": 6,
-        "x": 9,
-        "y": 5
+        "h": 8,
+        "w": 5,
+        "x": 6,
+        "y": 8
       },
-      "id": 5,
+      "id": 7,
       "options": {
-        "colorMode": "value",
+        "colorMode": "background",
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -852,10 +648,10 @@
           "values": false
         },
         "showPercentChange": false,
-        "textMode": "auto",
+        "textMode": "value",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.0",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -867,7 +663,7 @@
           "location": "",
           "project": "tfm-nttdata",
           "rawQuery": true,
-          "rawSql": "SELECT \r\n  SUM(CPT_kg_co2) AS total_emisiones \r\nFROM `tfm-nttdata.NTTData.metricas`\r\n",
+          "rawSql": "SELECT SUM(CPT_kg_co2)\r\nFROM `tfm-nttdata.NTTData.metricas` \r\nWHERE Oficina IN UNNEST([${Oficina}])",
           "refId": "A",
           "sql": {
             "columns": [
@@ -888,7 +684,7 @@
           }
         }
       ],
-      "title": "Emisiones totoales",
+      "title": "Emisiones de CO2 totales",
       "type": "stat"
     },
     {
@@ -899,15 +695,48 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "continuous-GrYlRd"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": false,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 92,
+            "gradientMode": "scheme",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 3,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -919,17 +748,109 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 5,
-        "w": 4,
-        "x": 19,
-        "y": 5
+        "h": 8,
+        "w": 13,
+        "x": 11,
+        "y": 8
       },
-      "id": 10,
+      "id": 6,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-bigquery-datasource",
+            "uid": "P0871A590F805E5CD"
+          },
+          "editorMode": "code",
+          "format": 1,
+          "location": "",
+          "project": "tfm-nttdata",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  TIMESTAMP(DATE_TRUNC(Execution_day, MONTH)) AS time,\r\n  SUM(CPT_kg_co2) AS Total_CO2\r\nFROM\r\n  `tfm-nttdata.NTTData.metricas`\r\nWHERE Execution_day IS NOT NULL\r\n  AND Oficina IN UNNEST([${Oficina}])\r\nGROUP BY\r\n  time\r\nORDER BY\r\n  time\r\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Consumo de CO2 por mes",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-bigquery-datasource",
+        "uid": "P0871A590F805E5CD"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "links": [
+            {
+              "targetBlank": false,
+              "title": "Carbon_efficiency_interior",
+              "url": "/d/b2451c87-03a6-4ed7-92d2-5246e43381b2/carbon-efficiency?orgId=1"
+            }
+          ],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "orange"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 4,
+        "x": 6,
+        "y": 16
+      },
+      "id": 12,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -938,10 +859,13 @@
           "values": false
         },
         "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
+        "text": {
+          "titleSize": 1
+        },
+        "textMode": "value_and_name",
+        "wideLayout": false
       },
-      "pluginVersion": "10.4.0",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "dataset": "NTTData",
@@ -949,22 +873,17 @@
             "type": "grafana-bigquery-datasource",
             "uid": "P0871A590F805E5CD"
           },
-          "editorMode": "builder",
+          "editorMode": "code",
           "format": 1,
           "location": "",
           "project": "tfm-nttdata",
-          "rawSql": "SELECT AVG(Carbon_efficiency) FROM `tfm-nttdata.NTTData.metricas` LIMIT 50 ",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  TIMESTAMP(DATE_TRUNC(Execution_day, MONTH)) AS time,\r\n  ROUND(AVG(Carbon_efficiency), 2) AS porcentaje_no_usado\r\nFROM `tfm-nttdata.NTTData.metricas`\r\nWHERE Execution_day IS NOT NULL\r\n  AND Carbon_efficiency IS NOT NULL\r\n  AND Oficina IN UNNEST([${Oficina}])\r\nGROUP BY time\r\nORDER BY time\r\n",
           "refId": "A",
           "sql": {
             "columns": [
               {
-                "name": "AVG",
-                "parameters": [
-                  {
-                    "name": "Carbon_efficiency",
-                    "type": "functionParameter"
-                  }
-                ],
+                "parameters": [],
                 "type": "function"
               }
             ],
@@ -981,7 +900,122 @@
           "table": "metricas"
         }
       ],
-      "title": "Carbon Efficiency",
+      "title": "Precisión por KG de CO2 emitido",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-bigquery-datasource",
+        "uid": "P0871A590F805E5CD"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "links": [
+            {
+              "targetBlank": false,
+              "title": "DWR Inteiror",
+              "url": "/d/aer0ilxdhsohsf/dws-interior?orgId=1"
+            }
+          ],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "semi-dark-purple"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "porcentaje_no_usado"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Porcentaje de datos no usado"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 4,
+        "x": 10,
+        "y": 16
+      },
+      "id": 9,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 1
+        },
+        "textMode": "value_and_name",
+        "wideLayout": false
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "dataset": "NTTData",
+          "datasource": {
+            "type": "grafana-bigquery-datasource",
+            "uid": "P0871A590F805E5CD"
+          },
+          "editorMode": "code",
+          "format": 1,
+          "location": "",
+          "project": "tfm-nttdata",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  TIMESTAMP(DATE_TRUNC(Execution_day, MONTH)) AS time,\r\n  ROUND(AVG(Data_Waste_Ratio) * 100, 2) AS porcentaje_no_usado\r\nFROM `tfm-nttdata.NTTData.metricas`\r\nWHERE Execution_day IS NOT NULL\r\n  AND Data_Waste_Ratio IS NOT NULL\r\n  AND Oficina IN UNNEST([${Oficina}])\r\nGROUP BY time\r\nORDER BY time\r\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "metricas"
+        }
+      ],
+      "title": "Porcentaje de datos no usados ",
+      "transparent": true,
       "type": "stat"
     },
     {
@@ -994,28 +1028,151 @@
           "color": {
             "mode": "thresholds"
           },
+          "links": [
+            {
+              "title": "Mfs-Interior",
+              "url": "/d/d30375d3-cfb5-4cae-ad21-338b09a7a129/mfs-interior?orgId=1"
+            }
+          ],
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "percent"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "porcentaje_no_usado"
+            },
+            "properties": []
+          }
+        ]
       },
       "gridPos": {
-        "h": 5,
-        "w": 4,
+        "h": 8,
+        "w": 5,
+        "x": 14,
+        "y": 16
+      },
+      "id": 10,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 1
+        },
+        "textMode": "value_and_name",
+        "wideLayout": false
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "dataset": "NTTData",
+          "editorMode": "code",
+          "format": 1,
+          "location": "",
+          "project": "tfm-nttdata",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  TIMESTAMP(DATE_TRUNC(Execution_day, MONTH)) AS time,\r\n  ROUND(AVG(Model_Footprint_Score), 2) AS model_footprint_score\r\nFROM `tfm-nttdata.NTTData.metricas`\r\nWHERE Execution_day IS NOT NULL\r\n  AND Model_Footprint_Score IS NOT NULL\r\n  AND Model_accuracy < 1\r\n  AND Oficina IN UNNEST([${Oficina}])\r\nGROUP BY time\r\nORDER BY time\r\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "metricas"
+        }
+      ],
+      "title": "Media de MFS ",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-bigquery-datasource",
+        "uid": "P0871A590F805E5CD"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "links": [
+            {
+              "targetBlank": false,
+              "title": "Carbon efficiency Inteiror",
+              "url": "/d/be3186d5-34f7-44a1-9cdd-b65de59473d6/epp-y-total-predicciones?orgId=1"
+            }
+          ],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "light-yellow"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "Wh"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "porcentaje_no_usado"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Porcentaje de datos no usado"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 5,
         "x": 19,
-        "y": 10
+        "y": 16
       },
       "id": 11,
       "options": {
@@ -1023,6 +1180,7 @@
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -1031,33 +1189,27 @@
           "values": false
         },
         "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
+        "text": {
+          "titleSize": 1
+        },
+        "textMode": "value_and_name",
+        "wideLayout": false
       },
-      "pluginVersion": "10.4.0",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "dataset": "NTTData",
-          "datasource": {
-            "type": "grafana-bigquery-datasource",
-            "uid": "P0871A590F805E5CD"
-          },
-          "editorMode": "builder",
+          "editorMode": "code",
           "format": 1,
           "location": "",
           "project": "tfm-nttdata",
-          "rawSql": "SELECT AVG(Model_Footprint_Score) FROM `tfm-nttdata.NTTData.metricas` LIMIT 50 ",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  TIMESTAMP(DATE_TRUNC(Execution_day, MONTH)) AS time,\r\n  ROUND(AVG(Epp_Wh), 2) AS porcentaje_no_usado\r\nFROM `tfm-nttdata.NTTData.metricas`\r\nWHERE Execution_day IS NOT NULL\r\n  AND Epp_Wh IS NOT NULL\r\n  AND Oficina IN UNNEST([${Oficina}])\r\nGROUP BY time\r\nORDER BY time\r\n",
           "refId": "A",
           "sql": {
             "columns": [
               {
-                "name": "AVG",
-                "parameters": [
-                  {
-                    "name": "Model_Footprint_Score",
-                    "type": "functionParameter"
-                  }
-                ],
+                "parameters": [],
                 "type": "function"
               }
             ],
@@ -1074,24 +1226,71 @@
           "table": "metricas"
         }
       ],
-      "title": "Media MFS",
+      "title": "Energia usada para una prediccioón",
+      "transparent": true,
       "type": "stat"
     }
   ],
+  "preload": false,
   "refresh": "",
-  "schemaVersion": 39,
+  "schemaVersion": 41,
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "allowCustomValue": true,
+        "current": {
+          "text": "All",
+          "value": "All"
+        },
+        "datasource": {
+          "type": "grafana-bigquery-datasource",
+          "uid": "P0871A590F805E5CD"
+        },
+        "definition": "",
+        "includeAll": true,
+        "multi": true,
+        "name": "Oficina",
+        "options": [],
+        "query": {
+          "editorMode": "code",
+          "format": 1,
+          "location": "",
+          "project": "tfm-nttdata",
+          "rawQuery": true,
+          "rawSql": "SELECT DISTINCT Oficina FROM `tfm-nttdata.NTTData.metricas` ORDER BY Oficina\r\n",
+          "refId": "tempvar",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      }
+    ]
   },
   "time": {
-    "from": "now-6h",
-    "to": "now"
+    "from": "2023-12-31T01:38:06.379Z",
+    "to": "2025-03-03T12:05:23.290Z"
   },
   "timepicker": {},
-  "timezone": "",
-  "title": "Dashboard inicial",
-  "uid": "afa7f1af-700e-44af-b7a0-79aa06edb460",
-  "version": 1,
-  "weekStart": ""
+  "timezone": "browser",
+  "title": "Principal Nuevo",
+  "uid": "berb2yrcux0qoe",
+  "version": 1
 }

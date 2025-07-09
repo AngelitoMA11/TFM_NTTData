@@ -71,4 +71,14 @@ def preguntar(pregunta: Pregunta):
     prompt = build_prompt_unificado(query, context, historial_global)
     respuesta = generate_answer(prompt)
     historial_global.append((query, respuesta))
-    return {"respuesta": respuesta}
+
+    # Indica la fuente de los modelos
+    if context:
+        fuente = "Modelos sugeridos extraídos de la base de datos Chroma."
+    else:
+        fuente = "Modelos sugeridos generados por Gemini (sin contexto de Chroma)."
+
+    return {
+        "respuesta": respuesta,
+        "fuente_modelos": fuente
+    }

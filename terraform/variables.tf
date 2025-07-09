@@ -94,3 +94,7 @@ variable "gemini_api_key" {
   description = "Clave de la API de Gemini (Vertex AI)"
   type        = string
 }
+variable "firestore_name" {
+  description = "Nombre de la base de datos Firestore"
+  type        = string  
+}

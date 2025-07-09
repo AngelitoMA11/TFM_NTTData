@@ -45,10 +45,26 @@ def limpiar_oficina(df):
             'LIS': 'Lisboa',
             'MAD': 'Madrid',
             'BCN': 'Barcelona',
-            'valència': 'Valencia'
+            'valència': 'Valencia',
+            'Porto': 'Oporto'
         }
         df['oficina'] = df['oficina'].replace(reemplazos)
         df['oficina'] = df['oficina'].fillna('Desconocido')
+    return df
+
+def añadir_coordenadas_oficina(df):
+    coordenadas = {
+        'Madrid':      (40.4168, -3.7038),
+        'Barcelona':   (41.3874, 2.1686),
+        'Valencia':    (39.4699, -0.3763),
+        'Lisboa':      (38.7223, -9.1393),
+        'Oporto':       (41.1579, -8.6291),
+        'Braga':       (41.5454, -8.4265),
+        'Desconocido': (None, None)
+    }
+    if 'oficina' in df.columns:
+        df['latitud'] = df['oficina'].map(lambda x: coordenadas.get(x, (None, None))[0])
+        df['longitud'] = df['oficina'].map(lambda x: coordenadas.get(x, (None, None))[1])
     return df
 
 def normalizar_columna(df, col):
@@ -166,6 +182,7 @@ def main(request: Request):
         df = limpiar_execution_date(df)
         df = limpiar_oficina(df)
         df = recalcular_kpis(df)
+        df = añadir_coordenadas_oficina(df)
 
         for col in ['dwr', 'cpt_per_mb']:
             if col in df.columns:
@@ -197,7 +214,9 @@ def main(request: Request):
             'mfs': 'Model_Footprint_Score', 
             'ept_per_mb': 'EPT_per_mb',
             'cpt_per_mb': 'CPT_per_mb',
-            'indice_sostenibilidad': 'Indice_Sostenibilidad'
+            'indice_sostenibilidad': 'Indice_Sostenibilidad',
+            'latitud': 'Latitud',
+            'longitud': 'Longitud'
 
         }
         df.rename(columns={k: v for k, v in columnas_a_renombrar.items() if k in df.columns}, inplace=True)

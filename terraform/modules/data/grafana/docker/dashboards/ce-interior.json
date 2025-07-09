@@ -18,128 +18,9 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 8,
+  "id": 10,
   "links": [],
   "panels": [
-    {
-      "datasource": {
-        "type": "grafana-bigquery-datasource",
-        "uid": "P0871A590F805E5CD"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "continuous-BlYlRd"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisGridShow": false,
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "axisSoftMin": 90,
-            "fillOpacity": 80,
-            "gradientMode": "hue",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineWidth": 1,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "percentage",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "orange",
-                "value": 70
-              },
-              {
-                "color": "red",
-                "value": 85
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 14,
-        "w": 18,
-        "x": 0,
-        "y": 0
-      },
-      "id": 5,
-      "options": {
-        "barRadius": 0,
-        "barWidth": 0.97,
-        "fullHighlight": false,
-        "groupWidth": 0.7,
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "orientation": "vertical",
-        "showValue": "auto",
-        "stacking": "none",
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        },
-        "xField": "Model_id",
-        "xTickLabelRotation": 0,
-        "xTickLabelSpacing": 0
-      },
-      "pluginVersion": "12.0.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "grafana-bigquery-datasource",
-            "uid": "P0871A590F805E5CD"
-          },
-          "editorMode": "code",
-          "format": 1,
-          "location": "",
-          "project": "tfm-nttdata",
-          "rawQuery": true,
-          "rawSql": "SELECT\r\n  Model_id,\r\n  ROUND(SUM(CPT_kg_co2), 4) AS Emision_total_co2\r\nFROM `tfm-nttdata.NTTData.metricas`\r\nWHERE CPT_kg_co2 IS NOT NULL\r\n      AND Oficina IN UNNEST([${Oficina}])\r\nGROUP BY Model_id\r\nORDER BY Emision_total_co2 DESC\r\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Emision total de cada modelo",
-      "type": "barchart"
-    },
     {
       "datasource": {
         "type": "grafana-bigquery-datasource",
@@ -167,19 +48,19 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 14,
-        "w": 10,
+        "h": 17,
+        "w": 8,
         "x": 0,
-        "y": 14
+        "y": 0
       },
-      "id": 6,
+      "id": 1,
       "options": {
-        "displayMode": "gradient",
+        "displayMode": "basic",
         "legend": {
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
         "maxVizHeight": 300,
         "minVizHeight": 16,
@@ -200,12 +81,16 @@
       "pluginVersion": "12.0.2",
       "targets": [
         {
+          "datasource": {
+            "type": "grafana-bigquery-datasource",
+            "uid": "P0871A590F805E5CD"
+          },
           "editorMode": "code",
           "format": 1,
           "location": "",
           "project": "tfm-nttdata",
           "rawQuery": true,
-          "rawSql": "SELECT\r\n  CAST(Model_id AS STRING) AS Modelos,\r\n  ROUND(CPT_per_mb, 4) AS Eficiencia_ecologica_por_modelo\r\nFROM `tfm-nttdata.NTTData.metricas`\r\nWHERE EPT_per_mb IS NOT NULL\r\n  AND Oficina IN UNNEST([${Oficina}])\r\nORDER BY Eficiencia_ecologica_por_modelo DESC\r\nLIMIT 5\r\n",
+          "rawSql": "SELECT\r\n  Oficina,\r\n  ROUND(AVG(Carbon_efficiency), 4) AS Precision_media\r\nFROM `tfm-nttdata.NTTData.metricas`\r\nWHERE Carbon_efficiency IS NOT NULL AND\r\n Model_id IN UNNEST([${Modelo:csv}])\r\nGROUP BY Oficina\r\nORDER BY Precision_media DESC\r\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -226,7 +111,7 @@
           }
         }
       ],
-      "title": "Modelos con menor eficiencia ecológica (CPT_per_MB)",
+      "title": "Carbon Efficiency por Ciudad",
       "type": "bargauge"
     },
     {
@@ -237,63 +122,89 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "thresholds"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": false,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
             }
           },
-          "mappings": []
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red"
+              },
+              {
+                "color": "yellow",
+                "value": 2
+              },
+              {
+                "color": "green",
+                "value": 3.5
+              }
+            ]
+          },
+          "unit": "short"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 14,
-        "w": 8,
-        "x": 10,
-        "y": 14
+        "h": 17,
+        "w": 12,
+        "x": 12,
+        "y": 0
       },
-      "id": 4,
+      "id": 2,
       "options": {
-        "displayLabels": [
-          "value"
-        ],
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
         "legend": {
+          "calcs": [],
           "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true,
-          "values": []
+          "placement": "right",
+          "showLegend": true
         },
-        "pieType": "pie",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": true
-        },
+        "orientation": "horizontal",
+        "showValue": "never",
+        "stacking": "none",
         "tooltip": {
           "hideZeros": false,
           "mode": "single",
           "sort": "none"
-        }
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
       },
       "pluginVersion": "12.0.2",
       "targets": [
         {
-          "datasource": {
-            "type": "grafana-bigquery-datasource",
-            "uid": "P0871A590F805E5CD"
-          },
           "editorMode": "code",
           "format": 1,
           "location": "",
           "project": "tfm-nttdata",
           "rawQuery": true,
-          "rawSql": "SELECT\r\n  Oficina,\r\n  ROUND(SUM(CPT_kg_co2), 2) AS Emision_total_co2\r\nFROM `tfm-nttdata.NTTData.metricas`\r\nWHERE\r\n  CPT_kg_co2 IS NOT NULL\r\n  AND TRIM(Oficina) IS NOT NULL\r\n  AND TRIM(Oficina) != ''\r\n  AND Model_id IN UNNEST([${Modelo:csv}])\r\nGROUP BY Oficina\r\nORDER BY Emision_total_co2 DESC\r\n",
+          "rawSql": "WITH eficiencia_por_modelo AS (\r\n  SELECT\r\n    CAST(Model_id AS STRING) AS metric,\r\n    ROUND(AVG(Carbon_efficiency), 4) AS Precision_por_CO2\r\n  FROM `tfm-nttdata.NTTData.metricas`\r\n  WHERE Carbon_efficiency IS NOT NULL\r\n    AND Model_id IS NOT NULL\r\n    AND Oficina IN UNNEST([${Oficina}])\r\n  GROUP BY Model_id\r\n),\r\nranked AS (\r\n  SELECT *,\r\n         RANK() OVER (ORDER BY Precision_por_CO2 ASC) AS rank_min,\r\n         RANK() OVER (ORDER BY Precision_por_CO2 DESC) AS rank_max\r\n  FROM eficiencia_por_modelo\r\n)\r\nSELECT\r\n  metric,\r\n  Precision_por_CO2\r\nFROM ranked\r\nWHERE rank_min <= 3 OR rank_max <= 3\r\nORDER BY Precision_por_CO2 DESC\r\nLIMIT 6\r\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -314,27 +225,25 @@
           }
         }
       ],
-      "title": "CO2 por oficina",
-      "type": "piechart"
+      "title": "Precisión_modelo_por_CO2",
+      "type": "barchart"
     }
   ],
   "preload": false,
-  "refresh": "",
   "schemaVersion": 41,
   "tags": [],
   "templating": {
     "list": [
       {
         "current": {
-          "text": [
-            "All"
-          ],
+          "text": "All",
           "value": [
             "$__all"
           ]
         },
         "definition": "",
         "includeAll": true,
+        "label": "Oficina",
         "multi": true,
         "name": "Oficina",
         "options": [],
@@ -344,7 +253,7 @@
           "location": "",
           "project": "tfm-nttdata",
           "rawQuery": true,
-          "rawSql": "SELECT DISTINCT Oficina FROM `tfm-nttdata.NTTData.metricas` ORDER BY Oficina\r\n",
+          "rawSql": "SELECT DISTINCT Oficina FROM `tfm-nttdata.NTTData.metricas` ORDER BY Oficina",
           "refId": "tempvar",
           "sql": {
             "columns": [
@@ -370,9 +279,7 @@
       },
       {
         "current": {
-          "text": [
-            "All"
-          ],
+          "text": "All",
           "value": [
             "$__all"
           ]
@@ -411,17 +318,18 @@
         },
         "refresh": 1,
         "regex": "",
+        "sort": 3,
         "type": "query"
       }
     ]
   },
   "time": {
-    "from": "2024-01-01T00:00:00.000Z",
-    "to": "2025-03-01T00:00:00.000Z"
+    "from": "now-6h",
+    "to": "now"
   },
   "timepicker": {},
-  "timezone": "",
-  "title": "CPT interior",
-  "uid": "d5e39d73-6da7-47f0-b28d-48fa8f9c3cdc",
+  "timezone": "browser",
+  "title": "Carbon_efficiency",
+  "uid": "b2451c87-03a6-4ed7-92d2-5246e43381b2",
   "version": 1
 }

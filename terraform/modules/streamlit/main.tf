@@ -39,7 +39,10 @@ resource "google_cloud_run_v2_service" "streamlit" {
         name  = "AGENT_URL"
         value = ""
       }
-
+      env {
+        name  = "firestore_url"
+        value = var.firestore_database
+      }
 
       ports {
         container_port = 8501

@@ -87,7 +87,7 @@ embedding_fn = SentenceTransformerEmbeddingFunction("BAAI/bge-base-en")
 def load_collection(name, excel_file, sheet_name):
     df = pd.read_excel(excel_file, sheet_name=sheet_name)
     collection = client.get_or_create_collection(name=name, embedding_function=embedding_fn)
-    doc_column = 'document'
+    doc_column = 'documento'
     if doc_column not in df.columns:
         doc_column = df.columns[0]  # fallback to first column if 'document' not found
     for i, row in df.iterrows():

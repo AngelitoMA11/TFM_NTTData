@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 8,
+  "id": 5,
   "links": [],
   "panels": [
     {
@@ -29,7 +29,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "continuous-BlYlRd"
+            "mode": "palette-classic"
           },
           "custom": {
             "axisBorderShow": false,
@@ -38,9 +38,8 @@
             "axisGridShow": false,
             "axisLabel": "",
             "axisPlacement": "auto",
-            "axisSoftMin": 90,
             "fillOpacity": 80,
-            "gradientMode": "hue",
+            "gradientMode": "none",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
@@ -56,31 +55,43 @@
           },
           "mappings": [],
           "thresholds": {
-            "mode": "percentage",
+            "mode": "absolute",
             "steps": [
               {
-                "color": "green"
-              },
-              {
-                "color": "orange",
-                "value": 70
+                "color": "yellow"
               },
               {
                 "color": "red",
-                "value": 85
+                "value": 80
               }
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "MFS_media"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
-        "h": 14,
+        "h": 10,
         "w": 18,
         "x": 0,
         "y": 0
       },
-      "id": 5,
+      "id": 3,
       "options": {
         "barRadius": 0,
         "barWidth": 0.97,
@@ -92,7 +103,7 @@
           "placement": "bottom",
           "showLegend": true
         },
-        "orientation": "vertical",
+        "orientation": "auto",
         "showValue": "auto",
         "stacking": "none",
         "tooltip": {
@@ -116,7 +127,7 @@
           "location": "",
           "project": "tfm-nttdata",
           "rawQuery": true,
-          "rawSql": "SELECT\r\n  Model_id,\r\n  ROUND(SUM(CPT_kg_co2), 4) AS Emision_total_co2\r\nFROM `tfm-nttdata.NTTData.metricas`\r\nWHERE CPT_kg_co2 IS NOT NULL\r\n      AND Oficina IN UNNEST([${Oficina}])\r\nGROUP BY Model_id\r\nORDER BY Emision_total_co2 DESC\r\n",
+          "rawSql": "SELECT\r\n  Model_id,\r\n  ROUND(AVG(Model_Footprint_Score), 4) AS MFS_media\r\nFROM\r\n  `tfm-nttdata.NTTData.metricas`\r\nWHERE\r\n  Model_Footprint_Score IS NOT NULL \r\n   AND Oficina IN UNNEST([${Oficina}]) \r\nGROUP BY\r\n  Model_id\r\nORDER BY\r\n  MFS_media DESC\r\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -137,97 +148,8 @@
           }
         }
       ],
-      "title": "Emision total de cada modelo",
+      "title": "MFS por modelo",
       "type": "barchart"
-    },
-    {
-      "datasource": {
-        "type": "grafana-bigquery-datasource",
-        "uid": "P0871A590F805E5CD"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "continuous-GrYlRd"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 14,
-        "w": 10,
-        "x": 0,
-        "y": 14
-      },
-      "id": 6,
-      "options": {
-        "displayMode": "gradient",
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "maxVizHeight": 300,
-        "minVizHeight": 16,
-        "minVizWidth": 8,
-        "namePlacement": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": true
-        },
-        "showUnfilled": true,
-        "sizing": "auto",
-        "valueMode": "color"
-      },
-      "pluginVersion": "12.0.2",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": 1,
-          "location": "",
-          "project": "tfm-nttdata",
-          "rawQuery": true,
-          "rawSql": "SELECT\r\n  CAST(Model_id AS STRING) AS Modelos,\r\n  ROUND(CPT_per_mb, 4) AS Eficiencia_ecologica_por_modelo\r\nFROM `tfm-nttdata.NTTData.metricas`\r\nWHERE EPT_per_mb IS NOT NULL\r\n  AND Oficina IN UNNEST([${Oficina}])\r\nORDER BY Eficiencia_ecologica_por_modelo DESC\r\nLIMIT 5\r\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Modelos con menor eficiencia ecológica (CPT_per_MB)",
-      "type": "bargauge"
     },
     {
       "datasource": {
@@ -251,15 +173,16 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 14,
-        "w": 8,
-        "x": 10,
-        "y": 14
+        "h": 17,
+        "w": 6,
+        "x": 18,
+        "y": 0
       },
-      "id": 4,
+      "id": 6,
       "options": {
         "displayLabels": [
-          "value"
+          "value",
+          "name"
         ],
         "legend": {
           "displayMode": "list",
@@ -284,6 +207,7 @@
       "pluginVersion": "12.0.2",
       "targets": [
         {
+          "dataset": "NTTData",
           "datasource": {
             "type": "grafana-bigquery-datasource",
             "uid": "P0871A590F805E5CD"
@@ -293,7 +217,152 @@
           "location": "",
           "project": "tfm-nttdata",
           "rawQuery": true,
-          "rawSql": "SELECT\r\n  Oficina,\r\n  ROUND(SUM(CPT_kg_co2), 2) AS Emision_total_co2\r\nFROM `tfm-nttdata.NTTData.metricas`\r\nWHERE\r\n  CPT_kg_co2 IS NOT NULL\r\n  AND TRIM(Oficina) IS NOT NULL\r\n  AND TRIM(Oficina) != ''\r\n  AND Model_id IN UNNEST([${Modelo:csv}])\r\nGROUP BY Oficina\r\nORDER BY Emision_total_co2 DESC\r\n",
+          "rawSql": "SELECT\r\n  Oficina,\r\n  AVG(  Model_Footprint_Score) AS MFS\r\nFROM \r\n  `tfm-nttdata.NTTData.metricas`\r\nWHERE\r\n Model_id IN UNNEST([${Modelo:csv}])\r\nGROUP BY\r\n  Oficina\r\nORDER BY\r\n  MFS DESC\r\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "metricas"
+        }
+      ],
+      "title": "Media MFS por oficina",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-bigquery-datasource",
+        "uid": "P0871A590F805E5CD"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": false,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "light-orange"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Precision_modelo_por_CO2"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "super-light-orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "model_footprint_score"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "super-light-orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 18,
+        "x": 0,
+        "y": 10
+      },
+      "id": 7,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "editorMode": "code",
+          "format": 1,
+          "location": "",
+          "project": "tfm-nttdata",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  TIMESTAMP(DATE_TRUNC(Execution_day, MONTH)) AS time,\r\n  ROUND(AVG(Model_Footprint_Score), 2) AS model_footprint_score\r\nFROM `tfm-nttdata.NTTData.metricas`\r\nWHERE Execution_day IS NOT NULL\r\n  AND Model_Footprint_Score IS NOT NULL\r\n  AND Model_accuracy < 1\r\n  AND Oficina IN UNNEST([${Oficina}])\r\n  AND Model_id IN UNNEST([${Modelo:csv}])\r\nGROUP BY time\r\nORDER BY time",
           "refId": "A",
           "sql": {
             "columns": [
@@ -314,8 +383,8 @@
           }
         }
       ],
-      "title": "CO2 por oficina",
-      "type": "piechart"
+      "title": "MFS en el tiempo",
+      "type": "timeseries"
     }
   ],
   "preload": false,
@@ -326,15 +395,14 @@
     "list": [
       {
         "current": {
-          "text": [
-            "All"
-          ],
+          "text": "All",
           "value": [
             "$__all"
           ]
         },
         "definition": "",
         "includeAll": true,
+        "label": "Oficina",
         "multi": true,
         "name": "Oficina",
         "options": [],
@@ -370,9 +438,7 @@
       },
       {
         "current": {
-          "text": [
-            "All"
-          ],
+          "text": "All",
           "value": [
             "$__all"
           ]
@@ -411,6 +477,7 @@
         },
         "refresh": 1,
         "regex": "",
+        "sort": 3,
         "type": "query"
       }
     ]
@@ -421,7 +488,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "CPT interior",
-  "uid": "d5e39d73-6da7-47f0-b28d-48fa8f9c3cdc",
+  "title": "MFS interior",
+  "uid": "d30375d3-cfb5-4cae-ad21-338b09a7a129",
   "version": 1
 }
