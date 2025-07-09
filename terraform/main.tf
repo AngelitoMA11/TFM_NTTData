@@ -5,16 +5,6 @@ terraform {
   }
 }
 
-# module "gitaction" {
-#   source              = "./modules/gitaction"
-#   project_id          = var.project_id
-#   region                 = var.region
-#   wif_pool_name       = "github-pool"
-#   wif_provider_id     = "github-provider"
-#   github_repo         = "AngelitoMA11/TFM_NTTData"
-#   service_account_id  = "gcp-deploy"
-#   service_account_role = "roles/editor"
-# }
 
 module "bigquery" {
   source     = "./modules/data/bigquery"
