@@ -23,14 +23,20 @@ jobs:
         with:
           token_format: 'access_token'
           project_id: ${{ secrets.PROJECT_ID }}
+          region: ${ secrets.REGION }
+          zone: ${ secrets.ZONE }
           workload_identity_provider: ${{ secrets.GITACTION }}
           service_account: ${{ secrets.SERVICEACCOUNT }}
+          gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
+          user_grafana: ${{ secrets.USER_GRAFANA }}
+          password_grafana: ${{ secrets.PASSWORD_GRAFANA }} 
+          vpc_network: ${{ secrets.VPC_NETWORK }}
+          subnetwork_name: ${{ secrets.SUBNETWORK_NAME }}
+          firestore_name: ${{ secrets.FIRESTORE_NAME }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      # - name: Crear prod.tfvars
-      #   run: echo "${{ secrets.TFVARS_PROD }}" > ./terraform/prod.tfvars 
       - name: Terraform Init
         run: terraform init 
         working-directory: ./terraform
@@ -52,11 +58,13 @@ jobs:
         image:
           - name: streamlit
             repo: streamlit
-            path: ./terraform/modules/streamlit/streamlit
-          # Añadir aquí más bloques si creas más imágenes
-          # - name: limpieza
-          #   repo: limpieza-repo
-          #   path: ./terraform/modules/limpieza
+            path: ./streamlit
+          - name: grafana
+            repo: grafana
+            path: ./terraform/modules/data/grafana/docker
+          - name: chatbot
+            repo: chatbot
+            path: ./chatbot/cloud_run_agente
 
     steps:
       - name: Checkout repo
@@ -68,8 +76,16 @@ jobs:
         with:
           token_format: 'access_token'
           project_id: ${{ secrets.PROJECT_ID }}
+          region: ${ secrets.REGION }
+          zone: ${ secrets.ZONE }
           workload_identity_provider: ${{ secrets.GITACTION }}
           service_account: ${{ secrets.SERVICEACCOUNT }}
+          gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
+          user_grafana: ${{ secrets.USER_GRAFANA }}
+          password_grafana: ${{ secrets.PASSWORD_GRAFANA }} 
+          vpc_network: ${{ secrets.VPC_NETWORK }}
+          subnetwork_name: ${{ secrets.SUBNETWORK_NAME }}
+          firestore_name: ${{ secrets.FIRESTORE_NAME }}
 
       - name: Docker login to Artifact Registry
         uses: docker/login-action@v1
@@ -97,8 +113,16 @@ jobs:
         with:
           token_format: 'access_token'
           project_id: ${{ secrets.PROJECT_ID }}
+          region: ${ secrets.REGION }
+          zone: ${ secrets.ZONE }
           workload_identity_provider: ${{ secrets.GITACTION }}
           service_account: ${{ secrets.SERVICEACCOUNT }}
+          gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
+          user_grafana: ${{ secrets.USER_GRAFANA }}
+          password_grafana: ${{ secrets.PASSWORD_GRAFANA }} 
+          vpc_network: ${{ secrets.VPC_NETWORK }}
+          subnetwork_name: ${{ secrets.SUBNETWORK_NAME }}
+          firestore_name: ${{ secrets.FIRESTORE_NAME }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -109,4 +133,4 @@ jobs:
 
       - name: Terraform Apply
         working-directory: terraform/
-        run: terraform apply -auto-approve -var-file="terraform.tfvars"
+        run: terraform apply -auto-approve 
