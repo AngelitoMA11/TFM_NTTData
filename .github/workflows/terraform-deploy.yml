@@ -1,0 +1,112 @@
+name: Deploy Terraform to GCP
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  terraform-init:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Auth to GCP
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          token_format: 'access_token'
+          project_id: ${{ secrets.PROJECT_ID }}
+          workload_identity_provider: ${{ secrets.GITACTION }}
+          service_account: ${{ secrets.SERVICEACCOUNT }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      # - name: Crear prod.tfvars
+      #   run: echo "${{ secrets.TFVARS_PROD }}" > ./terraform/prod.tfvars 
+      - name: Terraform Init
+        run: terraform init 
+        working-directory: ./terraform
+
+      - name: Terraform Init
+        run: terraform init 
+        working-directory: ./terraform
+
+      - name: Terraform Apply (solo repositorio)
+        run: terraform apply -auto-approve -target=module.artifact -var-file="terraform.tfvars" 
+        working-directory: ./terraform
+
+  docker-build-push:
+    runs-on: ubuntu-latest
+    needs: terraform-init
+
+    strategy:
+      matrix:
+        image:
+          - name: streamlit
+            repo: streamlit
+            path: ./terraform/modules/streamlit/streamlit
+          # Añadir aquí más bloques si creas más imágenes
+          # - name: limpieza
+          #   repo: limpieza-repo
+          #   path: ./terraform/modules/limpieza
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Authenticate to Google Cloud via Workload Identity Federation
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          token_format: 'access_token'
+          project_id: ${{ secrets.PROJECT_ID }}
+          workload_identity_provider: ${{ secrets.GITACTION }}
+          service_account: ${{ secrets.SERVICEACCOUNT }}
+
+      - name: Docker login to Artifact Registry
+        uses: docker/login-action@v1
+        with:
+          username: 'oauth2accesstoken'
+          password: '${{ steps.auth.outputs.access_token }}'
+          registry: 'europe-west1-docker.pkg.dev'
+
+      - name: Build and Push Docker image
+        run: |
+          docker build -t europe-west1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ matrix.image.repo }}/${{ matrix.image.name }}:latest ${{ matrix.image.path }}
+          docker push europe-west1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ matrix.image.repo }}/${{ matrix.image.name }}:latest
+      
+  terraform-deploy:
+    runs-on: ubuntu-latest
+    needs: docker-build-push
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Auth to GCP
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          token_format: 'access_token'
+          project_id: ${{ secrets.PROJECT_ID }}
+          workload_identity_provider: ${{ secrets.GITACTION }}
+          service_account: ${{ secrets.SERVICEACCOUNT }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init 
+        working-directory: ./terraform
+
+      - name: Terraform Apply
+        working-directory: terraform/
+        run: terraform apply -auto-approve -var-file="terraform.tfvars"
