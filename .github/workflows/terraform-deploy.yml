@@ -23,19 +23,13 @@ jobs:
         with:
           token_format: 'access_token'
           project_id: ${{ secrets.PROJECT_ID }}
-          region: ${ secrets.REGION }
-          zone: ${ secrets.ZONE }
           workload_identity_provider: ${{ secrets.GITACTION }}
           service_account: ${{ secrets.SERVICEACCOUNT }}
-          gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
-          user_grafana: ${{ secrets.USER_GRAFANA }}
-          password_grafana: ${{ secrets.PASSWORD_GRAFANA }} 
-          vpc_network: ${{ secrets.VPC_NETWORK }}
-          subnetwork_name: ${{ secrets.SUBNETWORK_NAME }}
-          firestore_name: ${{ secrets.FIRESTORE_NAME }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.10.4
 
       - name: Terraform Init
         run: terraform init 
@@ -46,7 +40,7 @@ jobs:
         working-directory: ./terraform
 
       - name: Terraform Apply (solo repositorio)
-        run: terraform apply -auto-approve -target=module.artifact -var-file="terraform.tfvars" 
+        run: terraform apply -auto-approve -target=module.artifact 
         working-directory: ./terraform
 
   docker-build-push:
@@ -126,6 +120,8 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.10.4
 
       - name: Terraform Init
         run: terraform init 

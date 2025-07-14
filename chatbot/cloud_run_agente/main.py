@@ -30,11 +30,17 @@ class Pregunta(BaseModel):
 
 def retrieve_context(query, k=3):
     try:
-        url = f"http://{CHROMA_HOST}:{CHROMA_PORT}/query"
-        response = requests.post(url, json={"text": query}, timeout=5)
-        response.raise_for_status()
-        result = response.json()
-        return result.get("documents", [[]])[0]
+        context = []
+
+        for coleccion in ["modelos_llm", "opt_infra"]:
+            url = f"http://{CHROMA_HOST}:{CHROMA_PORT}/query"
+            response = requests.post(url, json={"text": query, "collection_name": coleccion}, timeout=5)
+            response.raise_for_status()
+            result = response.json()
+            docs = result.get("documents", [[]])[0]
+            context.extend(docs)
+
+        return context
     except Exception as e:
         print(f"Error recuperando contexto: {e}")
         return []
@@ -71,14 +77,6 @@ def preguntar(pregunta: Pregunta):
     prompt = build_prompt_unificado(query, context, historial_global)
     respuesta = generate_answer(prompt)
     historial_global.append((query, respuesta))
-
-    # Indica la fuente de los modelos
-    if context:
-        fuente = "Modelos sugeridos extraídos de la base de datos Chroma."
-    else:
-        fuente = "Modelos sugeridos generados por Gemini (sin contexto de Chroma)."
-
     return {
-        "respuesta": respuesta,
-        "fuente_modelos": fuente
+        "respuesta": respuesta
     }
