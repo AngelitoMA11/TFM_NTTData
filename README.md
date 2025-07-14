@@ -23,6 +23,7 @@ Todo el sistema está desplegado en Google Cloud Platform:
 - Cloud Functions (limpieza de datos)
 - Terraform + GitHub Actions (infraestructura como código + CI/CD)
 
+![Arquitectura](./arquitectura.png)
 
 ## Tecnologías usadas
 
