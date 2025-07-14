@@ -58,7 +58,7 @@ if uploaded_file is not None:
             with st.spinner("Procesando archivo..."):
                 response = requests.post(CLOUD_FUNCTION_URL, files=files)
             if response.status_code == 200:
-                st.success("Archivo procesado correctamente. Descarga el resultado limpio abajo.")
+                st.success("Archivo procesado correctamente.")
                 if response.headers.get("Content-Type") == "text/csv":
                     st.download_button(
                         label="Descargar CSV limpio",
@@ -67,7 +67,7 @@ if uploaded_file is not None:
                         mime="text/csv"
                     )
                 else:
-                    st.info("Procesamiento completado, pero no se devolvió un archivo CSV.")
+                    st.info("Procesamiento completado.")
             else:
                 st.error(f"Error: {response.status_code} - {response.text}")
         except Exception as e:
