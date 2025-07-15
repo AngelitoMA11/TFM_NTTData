@@ -68,6 +68,6 @@ Todo el sistema está desplegado en Google Cloud Platform:
 - Lara Rubio Escandell  
 - Ángel Martínez Albert  
 - Gonzalo López Blanquer  
-- Eduardo Abad Zapata  
+- Eduardo Abad Zabala  
 
 Colaboración con NTT DATA  
