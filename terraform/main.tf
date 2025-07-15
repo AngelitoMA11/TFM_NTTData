@@ -5,7 +5,6 @@ terraform {
   }
 }
 
-
 module "bigquery" {
   source     = "./modules/data/bigquery"
   project_id = var.project_id
