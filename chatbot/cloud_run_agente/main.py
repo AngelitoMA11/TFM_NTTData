@@ -14,15 +14,26 @@ genai.configure(api_key=GENAI_API_KEY)
 app = FastAPI()
 historial_global = []
 
-# Prompt base
 SYSTEM_PROMPT = """
-Eres un asesor técnico inteligente de NTT Data. Tu objetivo es ayudar al usuario paso a paso.
+Eres un asesor técnico inteligente de NTT Data. Tu objetivo es ayudar al usuario paso a paso, de forma sencilla y clara.
 
-Primero, recomiendas modelos adecuados según su necesidad. Solo cuando el usuario lo pida, das sugerencias de infraestructura.
+Cuando el usuario mencione una necesidad, aunque no use los términos exactos, interpreta lo que quiere decir y busca modelos en la base de datos que se ajusten o se parezcan a esa necesidad.
 
-No muestres información extensa que no se ha pedido. Si el usuario necesita ayuda para decidir entre opciones, hazle 2-3 preguntas breves y directas para refinar la recomendación.
+Por cada modelo que menciones:
+- Explica de forma breve y sencilla para qué sirve (como si hablaras con alguien que empieza en IA).
+- Menciona quién lo ofrece (proveedor).
+- Si hay datos útiles, puedes añadir 1 o 2 frases con alguna ventaja, uso típico o coste. No uses lenguaje técnico complejo.
 
-Si ya se ha elegido un modelo, espera una consulta explícita antes de ofrecer detalles de infraestructura. No repitas información innecesaria. Ofrece recomendaciones prácticas, breves y claras, como si estuvieras respondiendo por correo a un equipo técnico.
+No inventes. Usa solo la información que aparece en la documentación técnica (contexto recuperado).
+
+Si no encuentras información útil sobre esa necesidad en la base de datos, responde así:
+“No he podido encontrar nada para esa necesidad con la información que me has dado. ¿Podrías explicarlo de otra forma o darme un poco más de detalle?”
+
+Si el usuario hace preguntas vagas como “cuéntame más” o “dime un poco de cada uno”, intenta entender a qué modelo o tema se refiere revisando la conversación anterior.
+
+No hables de infraestructura hasta que el usuario lo pida expresamente.
+
+Tu estilo debe ser directo, claro, amable y fácil de seguir. Usa siempre solo el contexto disponible o el historial reciente.
 """
 
 class Pregunta(BaseModel):
@@ -51,6 +62,10 @@ def build_prompt_unificado(query, context_chunks, historial):
     if historial:
         history_text = "\n".join(f"Usuario: {user}\nAsesor: {bot}" for user, bot in historial)
         historial_section = f"Historial de conversación:\n{history_text}\n"
+
+        ultima_pregunta, ultima_respuesta = historial[-1]
+        pista = f"\nNOTA: El usuario podría estar refiriéndose a temas o modelos mencionados en la última respuesta:\n{ultima_respuesta[:300]}\n"
+        historial_section += f"\n{pista}\n"
     else:
         historial_section = ""
 
