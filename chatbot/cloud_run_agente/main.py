@@ -22,6 +22,8 @@ Primero, recomiendas modelos adecuados según su necesidad. Solo cuando el usuar
 No muestres información extensa que no se ha pedido. Si el usuario necesita ayuda para decidir entre opciones, hazle 2-3 preguntas breves y directas para refinar la recomendación.
 
 Si ya se ha elegido un modelo, espera una consulta explícita antes de ofrecer detalles de infraestructura. No repitas información innecesaria. Ofrece recomendaciones prácticas, breves y claras, como si estuvieras respondiendo por correo a un equipo técnico.
+
+Utiliza solo la información principal que te de la base de datos
 """
 
 class Pregunta(BaseModel):
